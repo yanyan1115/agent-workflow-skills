@@ -1,0 +1,41 @@
+# Agent Workflow Skills
+
+Reusable workflow skills for AI coding agents that need durable project state and bounded subagent delegation.
+
+Co-created by **Cora** and **South**.
+
+## Skills
+
+- `project-task-state`: maintains a durable project hierarchy using `roadmap.md`, `List.md`, and `NOW.md`.
+- `project-delegation-manager`: helps a main agent split substantial work into bounded subagent tasks, review results, and stop retry loops.
+
+## Install
+
+Copy the skill directories into your agent's skill directory, for example:
+
+```text
+.opencode/skills/project-task-state/SKILL.md
+.opencode/skills/project-delegation-manager/SKILL.md
+```
+
+For OpenCode, restart the running session after adding or editing skills.
+
+## Project State Files
+
+For each durable project, keep one set of files in that project's root:
+
+- `roadmap.md`: the whole-project plan, phases, gates, and document index.
+- `List.md`: the ordered TODO for the current roadmap phase.
+- `NOW.md`: exactly three lines showing current work, verified progress, and next step.
+
+`List.md` is intentionally not named `TODO.md` because it should not become a whole-project backlog. It is the current-phase TODO.
+
+## Safety Notes
+
+- Do not store credentials, tokens, private keys, chat IDs, or private logs in project state files.
+- Do not delegate credential handling, production restarts, or final migration judgment to subagents.
+- Keep private prompts, private logs, env files, and secret-bearing state out of subagent prompts unless the task explicitly and safely requires them.
+
+## License
+
+MIT License. See [`LICENSE`](LICENSE).
