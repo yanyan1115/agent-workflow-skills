@@ -46,6 +46,8 @@ Do not turn an existing runtime-neutral design document into a giant session log
 
 Delegate one or two chunks at a time, not the whole project at once. Chunks delegated in parallel must be independent; if one chunk depends on another chunk's output, queue them instead of asking two subagents to guess each other's work.
 
+Parallelism is decided by conflict surface and dependency shape, not by a fixed agent count. Independent tasks that touch different files or systems can run in parallel; tasks that modify the same files, shared adapters, migrations, or cross-cutting behavior should be placed in one ordered session or explicitly batched. Separate worktrees or branches isolate edits, but they do not make conflicting designs compatible; they only postpone the conflict until merge or review.
+
 Good chunks are concrete and bounded, for example:
 
 - implement a schema and its tests;
@@ -65,6 +67,22 @@ Avoid delegating:
 
 Prefer available native subagent mechanisms according to fit and quota. Do not use expensive or prohibited models when local rules exclude them.
 
+## Subtask Contract
+
+Do not dispatch a subagent until the task has a small contract. A subtask contract is the protocol for letting work come back, not merely a prompt for sending work out.
+
+Include:
+
+- objective and owner-visible success condition;
+- scope and explicit non-goals;
+- expected files, directories, or systems to inspect or modify;
+- forbidden areas, including credentials, live private prompts, runtime state, unrelated files, and deployment boundaries;
+- dependencies and whether the task may run in parallel;
+- acceptance evidence required, such as diff summary, tests, command output summary, screenshots, logs, artifacts, or manual behavior checks;
+- rollback or rejection rule when the task changes scope, fails verification, or discovers that the plan is wrong.
+
+If the contract cannot name the acceptance evidence, the task is not ready to delegate. Refine the plan first.
+
 ## Subagent Prompt Template
 
 Each subagent prompt should state:
@@ -75,7 +93,8 @@ Each subagent prompt should state:
 - whether code edits are expected;
 - verification commands to run;
 - that dependencies must not be installed unless the task is blocked and the main agent approves;
-- what to return: files changed, commands/results, caveats, and whether anything remains uncommitted.
+- acceptance evidence to return;
+- what to return: files changed, commands/results, artifacts, caveats, and whether anything remains uncommitted.
 
 Ask the subagent to report in owner-readable terms, not only raw command names. The report should make these four points clear:
 
@@ -90,6 +109,8 @@ Keep private repository details, tokens, env values, chat IDs, OAuth material, l
 
 After a subagent returns, the main agent must inspect before trusting it.
 
+Worker completion is only a claim. The chunk is accepted only when the main agent verifies that the returned evidence satisfies the subtask contract.
+
 Minimum review loop:
 
 1. Check `git status`, relevant diff, and affected files.
@@ -99,6 +120,15 @@ Minimum review loop:
 5. Fix small issues directly when that is cheaper and safer than a delegation round trip.
 6. Update `List.md` and `NOW.md` based on the real reviewed state, not the subagent's claim.
 7. Commit and push only according to the repository delivery rules.
+
+Classify every returned chunk as one of four outcomes:
+
+- `ACCEPT`: evidence satisfies the contract, diff is in scope, and remaining risks are understood.
+- `REVISE`: the direction is right, but a bounded fix or missing check remains.
+- `REJECT`: the result violates scope, touches forbidden areas, lacks required evidence, or would create unsafe work.
+- `REPLAN`: the task premise, dependency map, or architecture direction changed; stop patching prompts and rewrite the plan before more work.
+
+For complex, irreversible, security-sensitive, cross-system, or high-risk chunks, add an independent verifier. This can be another subagent, a separate read-only review pass, or the main agent deliberately checking from the opposite direction. Ordinary bounded chunks can use self-verification plus the main agent's review.
 
 When reporting to the owner after delegation, include the same four owner-readable points: what changed, whether checks passed, whether anything off-limits was touched, and what remains. This is not to make the owner audit technical details; it creates a visible acceptance hook and forces the main agent to actually inspect the result.
 
@@ -135,6 +165,26 @@ Do not keep re-dispatching the same chunk indefinitely.
 The goal is to protect context and attention: reading three bad attempts can be more tiring than either clarifying the task or fixing a tiny issue.
 
 Use this shorthand: subagents move bricks; the main agent checks the blueprint, guards boundaries, patches tiny nail holes, and decides whether the house is accepted.
+
+## Shared Knowledge Promotion
+
+Do not let worker scratch notes pollute shared project knowledge. Temporary guesses, failed approaches, and unverified observations stay in the subagent report or working notes.
+
+Promote only accepted knowledge into project documents, roadmap/List/NOW, shared memory, or reusable skills:
+
+- verified architecture decisions;
+- reliable commands or checks;
+- accepted migration or rollback patterns;
+- confirmed pitfalls;
+- owner preferences or project constraints that the owner has confirmed or that were proven during accepted work.
+
+This keeps shared context useful instead of turning it into every worker's temporary theory pile.
+
+## Future Ideas, Not Default Requirements
+
+Some project-orchestration products add useful features that are not default requirements for a local workflow: scheduled or event-triggered coordinators, long-running cloud agents, project libraries for artifacts, automatic local-agent handoff, best-of-N worker attempts, and progressive review density for large migrations.
+
+Record these as future ideas only when relevant. Do not implement or simulate them unless the owner asks or a concrete project need appears.
 
 ## Completion
 
