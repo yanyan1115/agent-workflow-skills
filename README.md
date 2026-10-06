@@ -6,7 +6,7 @@ Co-created by **Cora** and **South**.
 
 ## Skills
 
-- `project-task-state`: maintains a durable project hierarchy using `roadmap.md`, `List.md`, and `NOW.md`.
+- `project-task-state`: maintains a durable project hierarchy using `roadmap.md`, `List.md`, and `NOW.md`, plus a `decisions.md` record of choices and reasons.
 - `project-delegation-manager`: helps a main agent split substantial work into bounded subagent tasks, review results, and stop retry loops.
 
 ## Install
@@ -27,6 +27,7 @@ For each durable project, keep one set of files in that project's root:
 - `roadmap.md`: the whole-project plan, phases, gates, and document index.
 - `List.md`: the ordered TODO for the current roadmap phase.
 - `NOW.md`: exactly three lines showing current work, verified progress, and next step.
+- `decisions.md`: each real choice with its date and reason. Not read every session; read it before overturning an earlier choice.
 
 `List.md` is intentionally not named `TODO.md` because it should not become a whole-project backlog. It is the current-phase TODO.
 

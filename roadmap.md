@@ -20,6 +20,7 @@ Publish reusable, sanitized workflow skills for durable project state and bounde
 ## Document Index
 
 - [`README.md`](README.md): public overview, install notes, authorship, and safety notes.
+- [`decisions.md`](decisions.md): choices made for this repository and why.
 - [`LICENSE`](LICENSE): MIT license for Cora and South's co-created work.
 - [`skills/project-task-state/SKILL.md`](skills/project-task-state/SKILL.md): durable project state workflow.
 - [`skills/project-delegation-manager/SKILL.md`](skills/project-delegation-manager/SKILL.md): bounded subagent delegation workflow.

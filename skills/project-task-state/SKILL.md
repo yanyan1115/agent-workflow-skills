@@ -12,6 +12,7 @@ Pure conversation is different. When no concrete task is being executed, the age
 ## File Scope
 
 - Keep one `roadmap.md`, one `List.md`, and one `NOW.md` per durable project, not per chat session and not as a global workspace-wide diary.
+- Also create `decisions.md` in the project root at project start. It is not part of the per-session read order; see Decision Record below.
 - Use the existing trio in the active project's root when present.
 - If the active durable project lacks any of the three files, initialize the missing file in that project's root before substantial work. Do not place unrelated projects into one state set merely because their sessions share a workspace.
 - The workflow method and this skill may be shared, but an individual project's three state files and supporting documents remain inside that project's own authority.
@@ -55,6 +56,16 @@ Next step:
 - `Verified so far` records the latest verified checkpoint, conclusion, or blocker.
 - `Next step` gives the next executable action or the exact external condition being awaited.
 - When no task remains active, clear it back to the same three-field empty template.
+
+## Decision Record (`decisions.md`)
+
+Why this file exists: the costly failure is not making a choice but re-deriving "why did we choose this" after compaction or handoff, sometimes reaching the opposite conclusion and undoing a correct choice. Reasons written at the time are cheap; reasons reconstructed later are usually lost.
+
+- Create it at project start alongside the trio, and list it in the `roadmap.md` document index.
+- One entry per real choice: date, what was chosen, why, and what was rejected when that matters. One or two lines each.
+- Do not read it on every session start. Read it before overturning, reversing, or materially changing an earlier choice, and before re-arguing a direction the owner already settled.
+- When a decision is overturned, keep the old entry, mark it superseded, and add the new one with its reason. Do not delete history.
+- It records choices and reasons only. Not a task list, progress log, or copy of roadmap scope.
 
 ## Mandatory Update Points
 
