@@ -13,6 +13,7 @@ Pure conversation is different. When no concrete task is being executed, the age
 
 - Keep one `roadmap.md`, one `List.md`, and one `NOW.md` per durable project, not per chat session and not as a global workspace-wide diary.
 - Also create `decisions.md` in the project root at project start. It is not part of the per-session read order; see Decision Record below.
+- Also register the project in the machine-level project registry at project start; see Project Registry below.
 - Use the existing trio in the active project's root when present.
 - If the active durable project lacks any of the three files, initialize the missing file in that project's root before substantial work. Do not place unrelated projects into one state set merely because their sessions share a workspace.
 - The workflow method and this skill may be shared, but an individual project's three state files and supporting documents remain inside that project's own authority.
@@ -66,6 +67,15 @@ Why this file exists: the costly failure is not making a choice but re-deriving 
 - Do not read it on every session start. Read it before overturning, reversing, or materially changing an earlier choice, and before re-arguing a direction the owner already settled.
 - When a decision is overturned, keep the old entry, mark it superseded, and add the new one with its reason. Do not delete history.
 - It records choices and reasons only. Not a task list, progress log, or copy of roadmap scope.
+
+## Project Registry
+
+Why this exists: one agent often carries several projects, and a single project often needs to look up or build on another. Each project's own files say nothing about its siblings, and after compaction the agent may not remember which projects exist or where they live. The global checkpoint should not carry project lists either, because that turns it into a second task board.
+
+- Keep one registry per agent environment, outside every project root, in a place the agent sees at startup (for example, listed in an index the agent always loads). Do not inline the whole registry into the always-loaded instruction file; point to it.
+- One line per project, exactly four fields: name | location (machine and directory when there is more than one machine) | one-sentence summary | coarse status. Status is one of in progress / waiting on external / paused / done, plus at most half a sentence on what it waits for.
+- Keep each line short. Never put detailed progress, TODOs, decisions and reasons, process notes, chat quotes, or credentials in the registry. Those belong in the project's own `NOW.md`, `List.md`, `decisions.md`, and env files.
+- Add the line at project start and keep the status word current. When a project ends, mark it done instead of deleting the line, so later projects can still find and reference it. Do not add a summary to finished entries.
 
 ## Mandatory Update Points
 
